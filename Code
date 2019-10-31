@@ -47,7 +47,7 @@ namespace Шифры
                 }
                 int Text_sise = text.Length;
                 while (Text_sise % Key_size != 0) { text += "."; Text_sise++; };
-                Console.WriteLine("Введите путь к файлу, в который сохранить текст");
+                Console.WriteLine("Введите путь к файлу, в который сохранить шифртекст,должен содержать расширение '.encode'");
                 string СrText = Console.ReadLine();
                 while (Path.GetExtension(СrText) != ".encode")
                 {
@@ -141,7 +141,7 @@ namespace Шифры
                     if (line.Contains(" - ")) new_alph[k] = line.Substring(line.IndexOf('-') + 3, 1);
                     line = key.ReadLine();
                 }
-                Console.WriteLine("Введите путь к файлу, в который сохранить текст");
+                Console.WriteLine("Введите путь к файлу, в который сохранить текст, должен содержать расширение '.encode'");
                 string СrText = Console.ReadLine();
                 while (Path.GetExtension(СrText) != ".encode")
                 {
@@ -150,13 +150,14 @@ namespace Шифры
                 }
                 using (StreamWriter writer = File.CreateText(СrText))
                 {
-                    Console.WriteLine("Шифротекст был сохранён в файле " + СrText + ".encode");
+                    Console.WriteLine("Шифротекст был сохранён в файле " + СrText);
                     writer.WriteLine("alg: шифр замены\nтекст:");
                     for (int i = 0; i < text.Length; i++)
                     {
                         for (int j = 0; j < old_alph.Length; j++)
                         {
-                            if (text_array[i] == Convert.ToChar(old_alph[j]) || Char.ToLower(text_array[i]) == Convert.ToChar(old_alph[j])) { writer.Write(new_alph[j]); check = true; break; }
+                            char K = Convert.ToChar(old_alph[j]);
+                            if (text_array[i] == K || Char.ToLower(text_array[i]) == K || Char.ToUpper(text_array[i])== K) { writer.Write(new_alph[j]); check = true; break; }
                         }
                         if (check == false) writer.Write(text_array[i]);
                         check = false;
@@ -208,7 +209,7 @@ namespace Шифры
         }
         static void Generation_key_cipher_swap()
         {
-            Console.WriteLine("Введите путь к файлу с алфавитом");
+            Console.WriteLine("Введите путь к файлу с алфавитом, дожен содержать расширение '.alph'"); 
             string Alf_Name = @Console.ReadLine();
             while (!File.Exists(Alf_Name)|| Path.GetExtension(Alf_Name)!= ".alph")
             {
@@ -242,7 +243,7 @@ namespace Шифры
                     help_alph[Rnd] = help_alph[i];
                     help_alph[i] = help;
                 }
-                Console.WriteLine("Укажите путь к файлу для хранения полученного ключа: ");
+                Console.WriteLine("Укажите путь к файлу для хранения полученного ключа, дожен содержать расширение '.key' ");
                 string key_Name = @Console.ReadLine();
                 while (Path.GetExtension(key_Name) != ".key")
                 {
@@ -277,7 +278,7 @@ namespace Шифры
                 help[i] = i + 1;
             }
             Random rand = new Random();
-            Console.WriteLine("Укажите путь к файлу для хранения полученного ключа: ");
+            Console.WriteLine("Укажите путь к файлу для хранения полученного ключа, дожен содержать расширение '.key' ");
 
                 string key_Name = @Console.ReadLine();
                 while (Path.GetExtension(key_Name) != ".key")
@@ -331,14 +332,14 @@ namespace Шифры
                     {
                         try
                         {
-                            Console.WriteLine("Укажите путь к тексту, который хотите зашифровать\n");
+                            Console.WriteLine("Укажите путь к тексту, который хотите зашифровать,  дожен содержать расширение '.txt'\n");
                             string Text_Name = @Console.ReadLine();
                             while (!File.Exists(Text_Name) || Path.GetExtension(Text_Name) != ".txt")
                             {
                                 Console.WriteLine("Неверный формат файла. Укажите другой");
                                 Text_Name = @Console.ReadLine();
                             }
-                            Console.WriteLine("Укажите файл ключа, он должен содержать наименование шифра");
+                            Console.WriteLine("Укажите файл ключа, он должен содержать наименование шифра, дожен содержать расширение '.key'");
                             string key_Name = @Console.ReadLine();
                             while (Path.GetExtension(key_Name) != ".key")
                             {
@@ -347,7 +348,7 @@ namespace Шифры
                             }
                             Console.WriteLine(".>> Выберите метод шифровки\n" + "\t >>1. Применить шифр замены\n" + "\t >>2. Применить шифр перестановки\n");
                             Choise = Incorrect_value(Console.ReadLine());
-                            while ((Choise != 1) & (Choise != 2) & (Choise != 3))
+                            while ((Choise != 1) & (Choise != 2))
                             {
                                 Console.WriteLine("Выберите 1, 2!!!");
                                 Choise = Incorrect_value(Console.ReadLine());
@@ -360,25 +361,22 @@ namespace Шифры
                                 case 2:
                                     Crypt_Move(Text_Name, key_Name);
                                     break;
-                                case 3:
-                                    break;
                             }
                         }
-                        catch { Console.WriteLine("Неверный формат файла. Укажите другой файл в Main"); }
+                        catch { Console.WriteLine("Неверный формат файла. Укажите другой файл (в Main)"); }
                     }
 
                     else//Расшифровать
                     {
                         try {
-                            Console.WriteLine("Укажите путь к тексту, который хотите расшифровать\n");
+                            Console.WriteLine("Укажите путь к тексту, который хотите расшифровать, дожен содержать расширение '.encode'\n");
                             string Text_Name = @Console.ReadLine();
                             while (!File.Exists(Text_Name) || Path.GetExtension(Text_Name) != ".encode")
                             {
                                 Console.WriteLine("Неверный формат файла. Укажите другой");
                                 Text_Name = @Console.ReadLine();
                             }
-                            Console.WriteLine("Укажите файл ключа, он должен содержать название метода шифрования");
-                            string key_Name = @Console.ReadLine();
+                            Console.WriteLine("Укажите файл ключа, он должен содержать название метода шифрования, дожен содержать расширение '.key'");
                             while (Path.GetExtension(key_Name) != ".key")
                             {
                                 Console.WriteLine("Неверный формат файла. Укажите другой файл");
@@ -386,7 +384,7 @@ namespace Шифры
                             }
                             Console.WriteLine(".>> Выберите метод расшифровки\n" + "\t >>1. Шифр замены\n" + "\t >>2. Шифр перестановки\n");
                             Choise = Incorrect_value(Console.ReadLine());
-                            while ((Choise != 1) & (Choise != 2) & (Choise != 3))
+                            while ((Choise != 1) & (Choise != 2))
                             {
                                 Console.WriteLine("Выберите 1, 2!!!");
                                 Choise = Incorrect_value(Console.ReadLine());
@@ -399,8 +397,6 @@ namespace Шифры
                                 case 2:
                                     Decrypt_Move(Text_Name, key_Name);
                                     break;
-                                case 3:
-                                    break;
                             }
                         }
                         catch { Console.WriteLine("Неверный формат файла. Укажите другой файл в Main"); }
@@ -412,7 +408,7 @@ namespace Шифры
                         "\t >>1. Шифр замены\n" +
                         "\t >>2. Шифр перестановки\n");
                     Choise = Incorrect_value(Console.ReadLine());
-                    while ((Choise != 1) & (Choise != 2) & (Choise != 3))
+                    while ((Choise != 1) & (Choise != 2))
                     {
                         Console.WriteLine("Выберите 1, 2!!!");
                         Choise = Incorrect_value(Console.ReadLine());
@@ -424,8 +420,6 @@ namespace Шифры
                             break;
                         case 2:
                             Generation_key_cipher_move();
-                            break;
-                        case 3:
                             break;
                     }
                 }
